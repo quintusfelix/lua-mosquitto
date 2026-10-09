@@ -1867,6 +1867,10 @@ static int create_property_list_from_lua_stack(lua_State *L, int index, mosquitt
 				lua_pop(L, 1);
 
 				rc = mosquitto_property_add_string_pair(proplist, identifier, userkey, uservalue);
+				if (rc != MOSQ_ERR_SUCCESS) {
+					lua_pop(L, 1); /* remove the current key */
+					break;
+				}
 			}
 		} else {
 			// can only parse string, number and table
