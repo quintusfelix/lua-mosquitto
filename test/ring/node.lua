@@ -48,7 +48,7 @@ mqtt:set_callback(mosq.ON_MESSAGE, function(mid, topic_in, message, qos, retain)
 		local topic = "/node/" .. ((MOSQ_NODE_ID + 1) % MOSQ_MAX_NODE)
 		mqtt:publish(topic, ttl, qos, retain)
 	else
-		local topic = "/done" 
+		local topic = "/done"
 		mqtt:publish(topic, ttl, 0, false)
 	end
 end)

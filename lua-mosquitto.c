@@ -817,7 +817,6 @@ static int ctx_disconnect_v5(lua_State *L)
  * @tparam[opt=0] number qos 0, 1 or 2
  * @tparam[opt=nil] boolean retain flag
  * @tparam[opt=nil] table properties
- * @return 
  * @see mosquitto_publish
  * @treturn[1] number MID can be used for correlation with callbacks
  * @return[2] nil
@@ -853,7 +852,6 @@ static int ctx_publish(lua_State *L)
  * @tparam[opt=0] number qos 0, 1 or 2
  * @tparam[opt=nil] boolean retain flag
  * @tparam[opt=nil] table properties
- * @return 
  * @see mosquitto_publish_v5
  * @treturn[1] number MID can be used for correlation with callbacks
  * @return[2] nil
@@ -1751,7 +1749,7 @@ static int create_lua_stack_from_property_list(lua_State *L, const mosquitto_pro
 
 				mosquitto_property_read_string_pair(prop, identifier, &strname, &strvalue, false);
 				if(strname == NULL || strvalue == NULL) {
-				// drop the not-yet-attached user property table so only the main table remains on the stack
+					// drop the not-yet-attached user property table so only the main table remains on the stack
 					lua_pop(L, 1);
 					return MOSQ_ERR_NOMEM;
 				}
