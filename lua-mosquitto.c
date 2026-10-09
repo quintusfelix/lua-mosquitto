@@ -278,6 +278,12 @@ static void ctx__on_clear(ctx_t *ctx)
 	luaL_unref(ctx->L, LUA_REGISTRYINDEX, ctx->on_log);
 }
 
+static void ctx__on_set(ctx_t *ctx, int *callback, int ref)
+{
+	luaL_unref(ctx->L, LUA_REGISTRYINDEX, *callback);
+	*callback = ref;
+}
+
 /***
  * Create a new mosquitto instance
  * @function new
@@ -1471,67 +1477,67 @@ static int ctx_callback_set(lua_State *L)
 
 	switch (callback_type) {
 		case CALLBACK_ON_CONNECT:
-			ctx->on_connect = ref;
+			ctx__on_set(ctx, &ctx->on_connect, ref);
 			mosquitto_connect_callback_set(ctx->mosq, ctx_on_connect);
 			break;
-			
+
 		case CALLBACK_ON_CONNECT_V5:
-			ctx->on_connect_v5 = ref;
+			ctx__on_set(ctx, &ctx->on_connect_v5, ref);
 			mosquitto_connect_v5_callback_set(ctx->mosq, ctx_on_connect_v5);
 			break;
 
 		case CALLBACK_ON_DISCONNECT:
-			ctx->on_disconnect = ref;
+			ctx__on_set(ctx, &ctx->on_disconnect, ref);
 			mosquitto_disconnect_callback_set(ctx->mosq, ctx_on_disconnect);
 			break;
 
 		case CALLBACK_ON_DISCONNECT_V5:
-			ctx->on_disconnect_v5 = ref;
+			ctx__on_set(ctx, &ctx->on_disconnect_v5, ref);
 			mosquitto_disconnect_v5_callback_set(ctx->mosq, ctx_on_disconnect_v5);
 			break;
 
 		case CALLBACK_ON_PUBLISH:
-			ctx->on_publish = ref;
+			ctx__on_set(ctx, &ctx->on_publish, ref);
 			mosquitto_publish_callback_set(ctx->mosq, ctx_on_publish);
 			break;
 
 		case CALLBACK_ON_PUBLISH_V5:
-			ctx->on_publish_v5 = ref;
+			ctx__on_set(ctx, &ctx->on_publish_v5, ref);
 			mosquitto_publish_v5_callback_set(ctx->mosq, ctx_on_publish_v5);
 			break;
 
 		case CALLBACK_ON_MESSAGE:
-			ctx->on_message = ref;
+			ctx__on_set(ctx, &ctx->on_message, ref);
 			mosquitto_message_callback_set(ctx->mosq, ctx_on_message);
 			break;
 
 		case CALLBACK_ON_MESSAGE_V5:
-			ctx->on_message_v5 = ref;
+			ctx__on_set(ctx, &ctx->on_message_v5, ref);
 			mosquitto_message_v5_callback_set(ctx->mosq, ctx_on_message_v5);
-			break;			
+			break;
 
 		case CALLBACK_ON_SUBSCRIBE:
-			ctx->on_subscribe = ref;
+			ctx__on_set(ctx, &ctx->on_subscribe, ref);
 			mosquitto_subscribe_callback_set(ctx->mosq, ctx_on_subscribe);
 			break;
 
 		case CALLBACK_ON_SUBSCRIBE_V5:
-			ctx->on_subscribe_v5 = ref;
+			ctx__on_set(ctx, &ctx->on_subscribe_v5, ref);
 			mosquitto_subscribe_v5_callback_set(ctx->mosq, ctx_on_subscribe_v5);
 			break;
 
 		case CALLBACK_ON_UNSUBSCRIBE:
-			ctx->on_unsubscribe = ref;
+			ctx__on_set(ctx, &ctx->on_unsubscribe, ref);
 			mosquitto_unsubscribe_callback_set(ctx->mosq, ctx_on_unsubscribe);
 			break;
 
 		case CALLBACK_ON_UNSUBSCRIBE_V5:
-			ctx->on_unsubscribe_v5 = ref;
+			ctx__on_set(ctx, &ctx->on_unsubscribe_v5, ref);
 			mosquitto_unsubscribe_v5_callback_set(ctx->mosq, ctx_on_unsubscribe_v5);
 			break;
 
 		case CALLBACK_ON_LOG:
-			ctx->on_log = ref;
+			ctx__on_set(ctx, &ctx->on_log, ref);
 			mosquitto_log_callback_set(ctx->mosq, ctx_on_log);
 			break;
 
