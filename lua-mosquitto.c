@@ -1831,8 +1831,9 @@ static int create_property_list_from_lua_stack(lua_State *L, int index, mosquitt
 					rc = mosquitto_property_add_varint(proplist, identifier, (uint32_t )value);
 					break;
 				default:
-					return MOSQ_ERR_INVAL;
-			}		
+					rc = MOSQ_ERR_INVAL;
+					break;
+			}
 		} else if (luatype == LUA_TSTRING) {
 			const char* value = lua_tolstring(L, -1, NULL);
 
@@ -1849,9 +1850,10 @@ static int create_property_list_from_lua_stack(lua_State *L, int index, mosquitt
 					rc = mosquitto_property_add_string(proplist, identifier, value);
 					break;
 				default:
-					return MOSQ_ERR_INVAL;
+					rc = MOSQ_ERR_INVAL;
+					break;
 			}
-		} else if (luatype == LUA_TTABLE) {		
+		} else if (luatype == LUA_TTABLE) {
 			int table_idx = lua_absindex (L, -1);
 			lua_pushnil(L);  /* first key */
 			while (lua_next(L, table_idx) != 0) {
