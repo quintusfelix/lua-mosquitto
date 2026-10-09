@@ -795,7 +795,7 @@ static int ctx_disconnect_v5(lua_State *L)
 	ctx_t *ctx = ctx_check(L, 1);
 	int rc;
 	mosquitto_property *proplist = NULL;
-	int reason_code = lua_tonumber(L, 2);
+	int reason_code = luaL_checkinteger(L, 2);
 
 	if (lua_table_on_stack(L, 3)) {
 		rc = create_property_list_from_lua_stack(L, 3, &proplist, CMD_DISCONNECT);
