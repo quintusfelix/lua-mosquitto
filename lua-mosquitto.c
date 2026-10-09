@@ -1781,11 +1781,12 @@ static int lua_table_on_stack(lua_State *L, int index) {
 
 static int create_property_list_from_lua_stack(lua_State *L, int index, mosquitto_property** proplist, int command)
 {
-	int rc;
+	int rc = MOSQ_ERR_SUCCESS; /* must stay SUCCESS if the properties table is empty */
     lua_pushvalue(L, index);
 	lua_pushnil(L);  /* first key */
 	while (lua_next(L, index) != 0) {
 		int type, identifier;
+		lua_Integer value;
 		size_t szt;
 
 		// parse property key
@@ -1799,7 +1800,7 @@ static int create_property_list_from_lua_stack(lua_State *L, int index, mosquitt
 		// parse property value
 		int luatype = lua_type(L, -1);
 		if (luatype == LUA_TNUMBER) {
-			int value = lua_tonumber(L, -1);
+			value = lua_tointeger(L, -1);
 			switch(type){
 				case MQTT_PROP_TYPE_BYTE:
 					if(value < 0 || value > UINT8_MAX){
