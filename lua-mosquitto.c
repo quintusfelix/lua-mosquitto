@@ -1750,7 +1750,11 @@ static int create_lua_stack_from_property_list(lua_State *L, const mosquitto_pro
 				}
 
 				mosquitto_property_read_string_pair(prop, identifier, &strname, &strvalue, false);
-				if(strname == NULL || strvalue == NULL) return MOSQ_ERR_NOMEM;
+				if(strname == NULL || strvalue == NULL) {
+				// drop the not-yet-attached user property table so only the main table remains on the stack
+					lua_pop(L, 1);
+					return MOSQ_ERR_NOMEM;
+				}
 
 				lua_pushstring(L, strvalue);
 				lua_setfield(L, -2, strname);
