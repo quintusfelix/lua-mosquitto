@@ -1837,11 +1837,10 @@ static int create_property_list_from_lua_stack(lua_State *L, int index, mosquitt
 					break;
 			}
 		} else if (luatype == LUA_TSTRING) {
-			const char* value = lua_tolstring(L, -1, NULL);
+			const char* value = lua_tolstring(L, -1, &szt);
 
 			switch(type){
 				case MQTT_PROP_TYPE_BINARY:
-					szt = strlen(value);
 					if(szt > UINT16_MAX){
 						rc = MOSQ_ERR_INVAL;
 						break;
