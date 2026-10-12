@@ -1,7 +1,7 @@
-package = "lua-mosquitto-v5"
+package = "lua-mosquitto"
 version = "0.5.0-1"
 source = {
-	url = "git://github.com/niecore/lua-mosquitto-v5",
+	url = "git://github.com/quintusfelix/lua-mosquitto",
 	tag = "v0.5.0"
 }
 description = {
@@ -12,7 +12,7 @@ description = {
 		only with sensible defaults for optional values, and return
 		values directly rather than via pointers.
 	]],
-	homepage = "https://github.com/niecore/lua-mosquitto-v5",
+	homepage = "https://github.com/quintusfelix/lua-mosquitto",
 	license = "MIT"
 }
 dependencies = {
@@ -36,4 +36,3 @@ build = {
 		}
 	}
 }
-

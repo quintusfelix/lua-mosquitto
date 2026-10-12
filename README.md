@@ -1,7 +1,5 @@
-lua-mosquitto-v5
-================
-
-> :warning: **This is a fork**: Link to stale [Pull request](https://github.com/flukso/lua-mosquitto/pull/33)
+lua-mosquitto
+=============
 
 Lua bindings to the [libmosquitto](http://www.mosquitto.org/) client library.
 
@@ -13,6 +11,7 @@ Generated API documentation for the lua functions [is also available](docs/)
 
 Compile
 -------
+
 You need Lua and mosquitto development packages (headers and libs) to
 build lua-mosquitto.
 
@@ -40,25 +39,24 @@ client.ON_CONNECT_V5 = function(success, rc, rc_string, flags, properties)
 end
 
 client.ON_SUBSCRIBE_V5 = function(mid, properties, ...)
-	-- send own
-	properties = {}
-	properties["content-type"] = "text/json"
-	properties["response-topic"] = "this/is/my/response/topic"
-	properties["payload-format-indicator"] = 0
-	properties["user-property"] = {a = "testA", b = "testB"}
-	properties["message-expiry-interval"] = 255
-	assert(mqtt:publish_v5("v5", "message", 0, false, properties))
+        -- send own
+        properties = {}
+        properties["content-type"] = "text/json"
+        properties["response-topic"] = "this/is/my/response/topic"
+        properties["payload-format-indicator"] = 0
+        properties["user-property"] = {a = "testA", b = "testB"}
+        properties["message-expiry-interval"] = 255
+        assert(mqtt:publish_v5("v5", "message", 0, false, properties))
 end
 
 client.ON_MESSAGE_V5 = function(mid, topic, payload, qos, retain, properties)
-	print("ON_MESSAGE_V5" .. properties["response-topic"]) 
+        print("ON_MESSAGE_V5" .. properties["response-topic"]) 
 end
 
 broker = arg[1] -- defaults to "localhost" if arg not set
 client:connect(broker)
 client:loop_forever()
 ```
-
 
 Here is a very simple example that subscribes to the broker $SYS topic tree
 and prints out the resulting messages:
@@ -97,11 +95,10 @@ client.ON_CONNECT = function()
 end
 
 client.ON_PUBLISH = function()
-	client:disconnect()
+        client:disconnect()
 end
 
 broker = arg[1] -- defaults to "localhost" if arg not set
 client:connect(broker)
 client:loop_forever()
 ```
-
