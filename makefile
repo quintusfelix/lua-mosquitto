@@ -40,7 +40,7 @@ install:
 	cp $(CMOD) $(DESTDIR)$(LUA_LIBDIR)/lua/$(LUA_VERSION)
 
 docs: $(CMOD) config.ld
-	ldoc .
+	ldoc lua-mosquitto.c
 
 clean:
 	$(RM) -r $(CMOD) $(OBJS) docs

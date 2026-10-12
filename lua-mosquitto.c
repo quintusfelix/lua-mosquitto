@@ -786,7 +786,7 @@ static int ctx_disconnect(lua_State *L)
 }
 
 /***
- * @function disconnect_v5 with v5 properties
+ * @function disconnect_v5
  * @tparam int reason_code
  * @tparam[opt=nil] table properties
  * @see mosquitto_disconnect_v5

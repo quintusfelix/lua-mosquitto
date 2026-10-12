@@ -24,6 +24,10 @@ For example:
 
     make LUAPKG=lua5.2
 
+To generate the documentation install [LDoc](https://github.com/lunarmodules/LDoc), then call:
+
+    make docs
+
 Example usage
 -------------
 

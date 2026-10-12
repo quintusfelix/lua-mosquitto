@@ -27,6 +27,7 @@
 <h1>lua-mosquitto</h1>
 
 
+
 <h2>Contents</h2>
 <ul>
 <li><a href="#Library_functions">Library functions </a></li>
@@ -60,6 +61,14 @@
 	<td class="summary">Does a topic match a subscription string?</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#sub_topic_check">sub_topic_check (subscription)</a></td>
+	<td class="summary">Is a pattern valid for subscription</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#pub_topic_check">pub_topic_check (topic)</a></td>
+	<td class="summary">Is a pattern valid for publishing</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#init">init ()</a></td>
 	<td class="summary"></td>
 	</tr>
@@ -87,6 +96,10 @@
 	<tr>
 	<td class="name" nowrap><a href="#will_set">will_set (topic, payload[, qos=0[, retain=false]])</a></td>
 	<td class="summary">Set a Will</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#will_set">will_set (topic, payload[, qos=0[, retain=false[, properties=nil]]])</a></td>
+	<td class="summary">Set a Will with v5 properties</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#will_clear">will_clear ()</a></td>
@@ -126,6 +139,10 @@
 	<td class="summary">Connect to a broker</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#connect">connect ([host=localhost[, port=1883[, keepalive=60[, bind_address=nil[, properties=nil]]]]])</a></td>
+	<td class="summary">Connect to a broker with interface bind and v5 properties</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#connect_async">connect_async ([host=localhost[, port=1883[, keepalive=60]]])</a></td>
 	<td class="summary">connect (async)</td>
 	</tr>
@@ -134,20 +151,40 @@
 	<td class="summary"></td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#reconnect_async">reconnect_async ()</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#disconnect">disconnect ()</a></td>
 	<td class="summary"></td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#publish">publish (topic, payload[, qos=0[, retain=nil]])</a></td>
+	<td class="name" nowrap><a href="#disconnect_v5">disconnect_v5 (reason_code[, properties=nil])</a></td>
+	<td class="summary"></td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#publish">publish (topic, payload[, qos=0[, retain=nil[, properties=nil]]])</a></td>
 	<td class="summary">Publish a message</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#publish_v5">publish_v5 (topic, payload[, qos=0[, retain=nil[, properties=nil]]])</a></td>
+	<td class="summary">Publish a message with v5 properties</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#subscribe">subscribe (topic[, qos=0])</a></td>
 	<td class="summary">Subscribe to a topic</td>
 	</tr>
 	<tr>
+	<td class="name" nowrap><a href="#subscribe_v5">subscribe_v5 (topic[, qos=0[, option=0[, properties=nil]]])</a></td>
+	<td class="summary">Subscribe to a topic with v5 properties</td>
+	</tr>
+	<tr>
 	<td class="name" nowrap><a href="#unsubscribe">unsubscribe (topic)</a></td>
 	<td class="summary">Unsubscribe from a topic</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#unsubscribe_v5">unsubscribe_v5 (topic[, properties=nil])</a></td>
+	<td class="summary">Unsubscribe from a topic with v5 properties</td>
 	</tr>
 	<tr>
 	<td class="name" nowrap><a href="#loop">loop ([timeout=-1[, max_packets=1]])</a></td>
@@ -204,6 +241,10 @@
 	<td class="name" nowrap><a href="#option_values">option_values</a></td>
 	<td class="summary">Option Values</td>
 	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#sub_option_values">sub_option_values</a></td>
+	<td class="summary">Sub Option Values</td>
+	</tr>
 </table>
 
 <br/>
@@ -225,7 +266,7 @@
     <h3>Returns:</h3>
     <ol>
 
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         version string "major.minor.revision"
     </ol>
 
@@ -248,11 +289,11 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">subscription</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          eg, blah/+/wop/#
         </li>
         <li><span class="parameter">topic</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          to test
         </li>
     </ul>
@@ -270,7 +311,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -280,6 +321,66 @@
     <h3>See also:</h3>
     <ul>
          <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_topic_matches_sub">mosquitto_topic_matches_sub</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "sub_topic_check"></a>
+    <strong>sub_topic_check (subscription)</strong>
+    </dt>
+    <dd>
+    Is a pattern valid for subscription
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">subscription</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         eg, blah/+/wop/#
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean result
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_sub_topic_check">mosquitto_sub_topic_check</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "pub_topic_check"></a>
+    <strong>pub_topic_check (topic)</strong>
+    </dt>
+    <dd>
+    Is a pattern valid for publishing
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">topic</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         eg, blah/blub/wop
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean result
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_pub_topic_check">mosquitto_pub_topic_check</a>
     </ul>
 
 
@@ -306,7 +407,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -344,7 +445,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -369,7 +470,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">client</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          id, optional. nil to allow library to generate
          (<em>default</em> nil)
         </li>
@@ -424,7 +525,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -449,7 +550,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">client</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          id, nil to allow the library to determine
          (<em>default</em> nil)
         </li>
@@ -473,7 +574,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -499,11 +600,11 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">topic</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          as per mosquitto_will_set
         </li>
         <li><span class="parameter">payload</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          as per mosquitto_will_set (but a proper lua string)
         </li>
         <li><span class="parameter">qos</span>
@@ -531,7 +632,69 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+        error description.</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    For some out of memory or illegal states
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_will_set">mosquitto_will_set</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "will_set"></a>
+    <strong>will_set (topic, payload[, qos=0[, retain=false[, properties=nil]]])</strong>
+    </dt>
+    <dd>
+    Set a Will with v5 properties
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">topic</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         as per mosquitto_will_set
+        </li>
+        <li><span class="parameter">payload</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         as per mosquitto_will_set (but a proper lua string)
+        </li>
+        <li><span class="parameter">qos</span>
+            <span class="types"><span class="type">number</span></span>
+         0, 1 or 2
+         (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">retain</span>
+            <span class="types"><span class="type">boolean</span></span>
+
+         (<em>default</em> false)
+        </li>
+        <li><span class="parameter">properties</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+         (<em>default</em> nil)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean true
+    </ol>
+     <h3>Or</h3>
+    <ol>
+        <li>
+        nil</li>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+        error code</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -567,7 +730,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -592,12 +755,12 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">username</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          may be nil
          (<em>default</em> nil)
         </li>
         <li><span class="parameter">password</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          may be nil
          (<em>default</em> nil)
         </li>
@@ -616,7 +779,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -642,22 +805,22 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">cafile</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          may be nil
          (<em>default</em> nil)
         </li>
         <li><span class="parameter">capath</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          may be nil
          (<em>default</em> nil)
         </li>
         <li><span class="parameter">certfile</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          may be nil
          (<em>default</em> nil)
         </li>
         <li><span class="parameter">keyfile</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          may be nil
          (<em>default</em> nil)
         </li>
@@ -676,7 +839,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -719,7 +882,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -744,15 +907,15 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">psk</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
         </li>
         <li><span class="parameter">identity</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
         </li>
         <li><span class="parameter">ciphers</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
          (<em>optional</em>)
         </li>
@@ -771,7 +934,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -800,12 +963,12 @@
          true for SSL_VERIFY_PEER, false for SSL_VERIFY_NONE
         </li>
         <li><span class="parameter">tls_version</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          nil to use default
          (<em>default</em> nil)
         </li>
         <li><span class="parameter">ciphers</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          nil to use the default set
          (<em>default</em> nil)
         </li>
@@ -824,7 +987,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -867,7 +1030,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -898,7 +1061,7 @@
          code, eg M.OPT_TLS_ALPN or M.OPT_PROTOCOL_VERSION
         </li>
         <li><span class="parameter">value</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string_or_number</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string_or_number</a></span>
          the value of the option to set
         </li>
     </ul>
@@ -916,7 +1079,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -943,7 +1106,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">host</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
          (<em>default</em> localhost)
         </li>
@@ -972,7 +1135,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -982,6 +1145,70 @@
     <h3>See also:</h3>
     <ul>
          <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_connect">mosquitto_connect</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "connect"></a>
+    <strong>connect ([host=localhost[, port=1883[, keepalive=60[, bind_address=nil[, properties=nil]]]]])</strong>
+    </dt>
+    <dd>
+    Connect to a broker with interface bind and v5 properties
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">host</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+         (<em>default</em> localhost)
+        </li>
+        <li><span class="parameter">port</span>
+            <span class="types"><span class="type">number</span></span>
+
+         (<em>default</em> 1883)
+        </li>
+        <li><span class="parameter">keepalive</span>
+            <span class="types"><span class="type">number</span></span>
+         in seconds
+         (<em>default</em> 60)
+        </li>
+        <li><span class="parameter">bind_address</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+         (<em>default</em> nil)
+        </li>
+        <li><span class="parameter">properties</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+         (<em>default</em> nil)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean true
+    </ol>
+     <h3>Or</h3>
+    <ol>
+        <li>
+        nil</li>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+        error code</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+        error description.</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    For some out of memory or illegal states
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_connect_bind_v5">mosquitto_connect_bind_v5</a>
     </ul>
 
 
@@ -997,7 +1224,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">host</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
          (<em>default</em> localhost)
         </li>
@@ -1026,7 +1253,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1062,7 +1289,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1072,6 +1299,42 @@
     <h3>See also:</h3>
     <ul>
          <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_reconnect">mosquitto_reconnect</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "reconnect_async"></a>
+    <strong>reconnect_async ()</strong>
+    </dt>
+    <dd>
+
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean true
+    </ol>
+     <h3>Or</h3>
+    <ol>
+        <li>
+        nil</li>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+        error code</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+        error description.</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    For some out of memory or illegal states
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_reconnect_async">mosquitto_reconnect_async</a>
     </ul>
 
 
@@ -1098,7 +1361,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1113,8 +1376,56 @@
 
 </dd>
     <dt>
+    <a name = "disconnect_v5"></a>
+    <strong>disconnect_v5 (reason_code[, properties=nil])</strong>
+    </dt>
+    <dd>
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">reason_code</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">properties</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+         (<em>default</em> nil)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean true
+    </ol>
+     <h3>Or</h3>
+    <ol>
+        <li>
+        nil</li>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+        error code</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+        error description.</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    For some out of memory or illegal states
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_disconnect_v5">mosquitto_disconnect_v5</a>
+    </ul>
+
+
+</dd>
+    <dt>
     <a name = "publish"></a>
-    <strong>publish (topic, payload[, qos=0[, retain=nil]])</strong>
+    <strong>publish (topic, payload[, qos=0[, retain=nil[, properties=nil]]])</strong>
     </dt>
     <dd>
     Publish a message
@@ -1123,11 +1434,11 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">topic</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
 
         </li>
         <li><span class="parameter">payload</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          (may be nil)
         </li>
         <li><span class="parameter">qos</span>
@@ -1140,14 +1451,14 @@
          flag
          (<em>default</em> nil)
         </li>
+        <li><span class="parameter">properties</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+         (<em>default</em> nil)
+        </li>
     </ul>
 
     <h3>Returns:</h3>
-    <ol>
-
-
-    </ol>
-     <h3>Or</h3>
     <ol>
 
            <span class="types"><span class="type">number</span></span>
@@ -1161,7 +1472,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1171,6 +1482,69 @@
     <h3>See also:</h3>
     <ul>
          <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_publish">mosquitto_publish</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "publish_v5"></a>
+    <strong>publish_v5 (topic, payload[, qos=0[, retain=nil[, properties=nil]]])</strong>
+    </dt>
+    <dd>
+    Publish a message with v5 properties
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">topic</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">payload</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         (may be nil)
+        </li>
+        <li><span class="parameter">qos</span>
+            <span class="types"><span class="type">number</span></span>
+         0, 1 or 2
+         (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">retain</span>
+            <span class="types"><span class="type">boolean</span></span>
+         flag
+         (<em>default</em> nil)
+        </li>
+        <li><span class="parameter">properties</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+         (<em>default</em> nil)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        MID can be used for correlation with callbacks
+    </ol>
+     <h3>Or</h3>
+    <ol>
+        <li>
+        nil</li>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+        error code</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+        error description.</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    For some out of memory or illegal states
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_publish_v5">mosquitto_publish_v5</a>
     </ul>
 
 
@@ -1186,7 +1560,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">topic</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          eg "blah/+/json/#"
         </li>
         <li><span class="parameter">qos</span>
@@ -1210,7 +1584,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1220,6 +1594,66 @@
     <h3>See also:</h3>
     <ul>
          <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_subscribe">mosquitto_subscribe</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "subscribe_v5"></a>
+    <strong>subscribe_v5 (topic[, qos=0[, option=0[, properties=nil]]])</strong>
+    </dt>
+    <dd>
+    Subscribe to a topic with v5 properties
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">topic</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         eg "blah/+/json/#"
+        </li>
+        <li><span class="parameter">qos</span>
+            <span class="types"><span class="type">number</span></span>
+         0, 1 or 2
+         (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">option</span>
+            <span class="types"><span class="type">number</span></span>
+
+         (<em>default</em> 0)
+        </li>
+        <li><span class="parameter">properties</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+         (<em>default</em> nil)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        MID can be used for correlation with callbacks
+    </ol>
+     <h3>Or</h3>
+    <ol>
+        <li>
+        nil</li>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+        error code</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+        error description.</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    For some out of memory or illegal states
+
+    <h3>See also:</h3>
+    <ul>
+         <li><a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_subscribe">mosquitto_subscribe</a></li>
+         <li><a href="index.html#option_types">option_types</a></li>
     </ul>
 
 
@@ -1235,7 +1669,7 @@
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">topic</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
          to unsubscribe from
         </li>
     </ul>
@@ -1253,7 +1687,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1263,6 +1697,54 @@
     <h3>See also:</h3>
     <ul>
          <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_unsubscribe">mosquitto_unsubscribe</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "unsubscribe_v5"></a>
+    <strong>unsubscribe_v5 (topic[, properties=nil])</strong>
+    </dt>
+    <dd>
+    Unsubscribe from a topic with v5 properties
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">topic</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+         to unsubscribe from
+        </li>
+        <li><span class="parameter">properties</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.5">table</a></span>
+
+         (<em>default</em> nil)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean true
+    </ol>
+     <h3>Or</h3>
+    <ol>
+        <li>
+        nil</li>
+        <li>
+           <span class="types"><span class="type">number</span></span>
+        error code</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
+        error description.</li>
+    </ol>
+
+    <h3>Raises:</h3>
+    For some out of memory or illegal states
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="http://mosquitto.org/api/files/mosquitto-h.html#mosquitto_unsubscribe_v5">mosquitto_unsubscribe_v5</a>
     </ul>
 
 
@@ -1302,7 +1784,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1351,7 +1833,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1387,7 +1869,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1423,7 +1905,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1497,7 +1979,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1541,7 +2023,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1577,7 +2059,7 @@
            <span class="types"><span class="type">number</span></span>
         error code</li>
         <li>
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.3/manual.html#6.4">string</a></span>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.2/manual.html#6.4">string</a></span>
         error description.</li>
     </ol>
 
@@ -1632,19 +2114,37 @@
         <li><span class="parameter">ON_CONNECT</span>
 
         </li>
+        <li><span class="parameter">ON_CONNECT_V5</span>
+
+        </li>
         <li><span class="parameter">ON_DISCONNECT</span>
+
+        </li>
+        <li><span class="parameter">ON_DISCONNECT_V5</span>
 
         </li>
         <li><span class="parameter">ON_PUBLISH</span>
 
         </li>
+        <li><span class="parameter">ON_PUBLISH_V5</span>
+
+        </li>
         <li><span class="parameter">ON_MESSAGE</span>
+
+        </li>
+        <li><span class="parameter">ON_MESSAGE_V5</span>
 
         </li>
         <li><span class="parameter">ON_SUBSCRIBE</span>
 
         </li>
+        <li><span class="parameter">ON_SUBSCRIBE_V5</span>
+
+        </li>
         <li><span class="parameter">ON_UNSUBSCRIBE</span>
+
+        </li>
+        <li><span class="parameter">ON_UNSUBSCRIBE_V5</span>
 
         </li>
         <li><span class="parameter">ON_LOG</span>
@@ -1776,14 +2276,50 @@
 
 
 </dd>
+    <dt>
+    <a name = "sub_option_values"></a>
+    <strong>sub_option_values</strong>
+    </dt>
+    <dd>
+    Sub Option Values
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">MQTT_SUB_OPT_NO_LOCAL</span>
+
+        </li>
+        <li><span class="parameter">MQTT_SUB_OPT_RETAIN_AS_PUBLISHED</span>
+
+        </li>
+        <li><span class="parameter">MQTT_SUB_OPT_SEND_RETAIN_ALWAYS</span>
+
+        </li>
+        <li><span class="parameter">MQTT_SUB_OPT_SEND_RETAIN_NEW</span>
+
+        </li>
+        <li><span class="parameter">MQTT_SUB_OPT_SEND_RETAIN_NEVER</span>
+
+        </li>
+    </ul>
+
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="index.html#option">option</a>
+    </ul>
+
+
+</dd>
 </dl>
 
 
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
-<i style="float:right;">Last updated 2020-08-19 09:34:21 </i>
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2026-10-12 14:12:06 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
